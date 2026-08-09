@@ -128,16 +128,19 @@ form .btn {
 .certificate-wrap {
   padding: 10px;
 }
+/* حجم الشهادة */
 .certificate {
   position: relative;
-  width: min(100%, 900px);
+  width: min(100%, 650px);
   aspect-ratio: 1414 / 2000;
   margin: auto;
   overflow: hidden;
   background: #fff;
   box-shadow: 0 10px 30px rgba(0, 0, 0, .12);
 }
-/* خلفية الشهادة */
+/* =========================
+   خلفية الشهادة
+   ========================= */
 .certificate-image {
   position: absolute;
   inset: 0;
@@ -159,14 +162,11 @@ form .btn {
   text-align: center;
   direction: rtl;
   font-family: "Cairo", sans-serif;
-  /*
-    حجم الخط الأساسي
-  */
   font-size: 48px;
   font-weight: 700;
   color: #545454;
   /*
-    نزلنا النص أكثر حتى لا يغطي العنوان
+    بداية النص نازلة حتى لا تغطي العنوان
   */
   padding: 34% 6% 8%;
 }
@@ -174,12 +174,12 @@ form .btn {
    التهنئة
    ========================= */
 .organization {
+  width: 100%;
   font-family: "Cairo", sans-serif;
   font-size: 48px;
   font-weight: 700;
   color: #545454;
   line-height: 1.55;
-  width: 100%;
 }
 /* =========================
    المسافات
@@ -230,7 +230,7 @@ form .btn {
   color: #545454;
   line-height: 1.6;
 }
-/* الفئة */
+/* الفئة نفسها */
 .dynamic-category {
   font-family: "Cairo", sans-serif;
   font-size: 48px;
@@ -256,7 +256,7 @@ form .btn {
   justify-content: center;
   gap: 10px;
   margin: 18px auto;
-  max-width: 900px;
+  max-width: 650px;
 }
 .certificate-actions .btn {
   flex: 1;

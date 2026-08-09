@@ -4,8 +4,10 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>دخول المعلمة - شهادة اجتياز</title>
+
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -13,10 +15,12 @@
 
   <main class="page">
 
-    <!-- صفحة تسجيل الدخول -->
+    <!-- تسجيل دخول المعلمة -->
     <section class="panel login-panel">
 
-      <a class="back" href="index.html">← الرئيسية</a>
+      <a class="back" href="index.html">
+        ← الرئيسية
+      </a>
 
       <h1>دخول المعلمة</h1>
 
@@ -26,20 +30,26 @@
 
       <form id="teacherForm">
 
-        <label>رقم الجوال</label>
+        <label for="phone">
+          رقم الجوال
+        </label>
 
         <input
           id="phone"
+          type="text"
           inputmode="numeric"
           autocomplete="tel"
           placeholder="05xxxxxxxx"
           required
         >
 
-        <label>كلمة المرور</label>
+        <label for="password">
+          كلمة المرور
+        </label>
 
         <input
           id="password"
+          type="text"
           maxlength="4"
           autocomplete="off"
           placeholder="مثال: K7M2"
@@ -63,7 +73,10 @@
     </section>
 
 
-    <!-- الشهادة -->
+    <!-- =========================
+         الشهادة
+         ========================= -->
+
     <section
       id="certificateSection"
       class="certificate-wrap hidden"
@@ -74,33 +87,79 @@
         class="certificate"
       >
 
-        <!-- صورة الشهادة -->
+        <!-- الخلفية -->
         <img
           src="./certificate.png"
           class="certificate-image"
           alt="شهادة اجتياز"
         >
 
-        <!-- اسم المعلمة -->
-        <div
-          id="teacherName"
-          class="teacher-name"
-        >
-          اسم المعلمة
-        </div>
 
-        <!-- فئة التدريس -->
-        <div
-          id="teacherCategory"
-          class="category"
-        >
-          الفئة
+        <!-- النص فوق الشهادة -->
+
+        <div class="certificate-text">
+
+
+          <div class="organization">
+            تهنئ إدارة التعليم النسائي
+          </div>
+
+          <div class="organization">
+            بجمعية فرقان لتحفيظ القرآن الكريم
+          </div>
+
+
+          <div class="certificate-space"></div>
+
+
+          <div class="teacher-line">
+            الأستاذة الفاضلة/
+            <span
+              id="teacherName"
+              class="dynamic-name"
+            >
+              اسم المعلمة
+            </span>
+          </div>
+
+
+          <div class="certificate-space-small"></div>
+
+
+          <div class="main-text">
+            لاجتيازها اختبار قياس في القرآن الكريم
+          </div>
+
+
+          <div class="category-line">
+            فئة التدريس:
+            <span
+              id="teacherCategory"
+              class="dynamic-category"
+            >
+              الفئة
+            </span>
+          </div>
+
+
+          <div class="certificate-space-small"></div>
+
+
+          <div class="thanks">
+            سائلين الله لها التوفيق والسداد
+          </div>
+
+          <div class="thanks">
+            وأن يجعل القرآن حجةً لها لا عليها.
+          </div>
+
         </div>
 
       </div>
 
 
-      <!-- أزرار الشهادة -->
+      <!-- الأزرار -->
+
       <div class="certificate-actions">
 
         <button
@@ -124,7 +183,6 @@
   </main>
 
 
-  <!-- ملف تشغيل تسجيل الدخول -->
   <script
     type="module"
     src="teacher.js"

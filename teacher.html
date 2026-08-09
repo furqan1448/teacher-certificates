@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>دخول المعلمة - شهادة اجتياز</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="page">
+    <section class="panel login-panel">
+      <a class="back" href="index.html">← الرئيسية</a>
+      <h1>دخول المعلمة</h1>
+      <p class="muted">أدخلي رقم الجوال وكلمة المرور الخاصة بك.</p>
+      <form id="teacherForm">
+        <label>رقم الجوال</label>
+        <input id="phone" inputmode="numeric" autocomplete="tel" placeholder="05xxxxxxxx" required>
+        <label>كلمة المرور</label>
+        <input id="password" maxlength="4" autocomplete="off" placeholder="مثال: K7M2" required>
+        <button class="btn primary" type="submit">عرض الشهادة</button>
+        <div id="teacherMessage" class="message"></div>
+      </form>
+    </section>
+
+    <section id="certificateSection" class="certificate-wrap hidden">
+      <div id="certificate" class="certificate">
+        <div class="certificate-border">
+          <div class="certificate-top">شهادة اجتياز</div>
+          <div class="certificate-title">تشهد الجهة بأن</div>
+          <div id="teacherName" class="teacher-name">اسم المعلمة</div>
+          <div class="certificate-title">قد اجتازت التقييم بنجاح</div>
+          <div class="category-label">فئة التدريس</div>
+          <div id="teacherCategory" class="category">الفئة</div>
+          <div class="certificate-footer">نسأل الله لها التوفيق والسداد</div>
+        </div>
+      </div>
+      <div class="certificate-actions">
+        <button class="btn primary" onclick="window.print()">طباعة / حفظ PDF</button>
+        <button class="btn secondary" id="logoutBtn">تسجيل خروج</button>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="teacher.js"></script>
+</body>
+</html>

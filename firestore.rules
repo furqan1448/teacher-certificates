@@ -1,0 +1,15 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // الإدارة: السماح بالقراءة والكتابة فقط للحساب الإداري المحدد.
+    // استبدلي ADMIN_UID بعد إنشاء الحساب إذا أردتِ تقييد الحساب بدقة.
+    match /teachers/{teacherId} {
+      allow read, write: if request.auth != null;
+      // مهم: هذه القاعدة مؤقتة لمرحلة الربط فقط.
+      // قبل نشر الموقع للمعلمات يجب نقل تحقق المعلمة إلى Cloud Function
+      // ثم تغيير read إلى false للمعلمات.
+    }
+  }
+}

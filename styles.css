@@ -10,6 +10,7 @@ body {
   color: #352c29;
 }
 
+/* الصفحة الرئيسية */
 .home {
   min-height: 100vh;
   display: grid;
@@ -21,11 +22,11 @@ body {
 .panel {
   background: #fff;
   border-radius: 24px;
-  box-shadow: 0 12px 40px rgba(0,0,0,.08);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .08);
 }
 
 .home-card {
-  width: min(520px,92%);
+  width: min(520px, 92%);
   padding: 48px 28px;
   text-align: center;
 }
@@ -58,6 +59,7 @@ body {
   margin-top: 30px;
 }
 
+/* الأزرار */
 .btn {
   border: 0;
   border-radius: 12px;
@@ -79,8 +81,9 @@ body {
   color: #4a403c;
 }
 
+/* الصفحات */
 .page {
-  width: min(980px,94%);
+  width: min(980px, 94%);
   margin: 40px auto;
 }
 
@@ -101,6 +104,7 @@ body {
   margin-bottom: 20px;
 }
 
+/* الحقول */
 label {
   display: block;
   margin: 16px 0 7px;
@@ -131,6 +135,7 @@ form .btn {
   display: none !important;
 }
 
+/* الإدارة */
 .admin-head {
   display: flex;
   align-items: center;
@@ -173,7 +178,7 @@ form .btn {
   margin: auto;
   overflow: hidden;
   background: #fff;
-  box-shadow: 0 10px 30px rgba(0,0,0,.12);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .12);
 }
 
 .certificate-image {
@@ -184,16 +189,18 @@ form .btn {
 }
 
 
-/* اسم المعلمة
-   بجانب «الأستاذة الفاضلة»
-*/
+/* =========================
+   اسم المعلمة
+   يظهر بجانب "الأستاذة الفاضلة"
+   ========================= */
+
 .teacher-name {
   position: absolute;
 
   top: 43%;
-  right: 8%;
+  right: 18%;
 
-  width: 55%;
+  width: 45%;
 
   text-align: right;
 
@@ -208,16 +215,18 @@ form .btn {
 }
 
 
-/* فئة التدريس
-   بجانب «فئة التدريس:»
-*/
+/* =========================
+   فئة التدريس
+   تظهر بجانب "فئة التدريس:"
+   ========================= */
+
 .category {
   position: absolute;
 
   top: 57%;
-  right: 8%;
+  right: 18%;
 
-  width: 55%;
+  width: 45%;
 
   text-align: right;
 
@@ -232,6 +241,7 @@ form .btn {
 }
 
 
+/* أزرار الشهادة */
 .certificate-actions {
   display: flex;
   justify-content: center;

@@ -161,11 +161,12 @@ form .btn {
   text-align: center;
   direction: rtl;
   font-family: "Cairo", sans-serif;
-  /* حجم الخط */
-  font-size: 30px;
+  font-size: 20px;
   font-weight: 700;
   color: #545454;
-  /* نزلنا النص حتى لا يغطي العنوان */
+  /*
+    بداية النص نازلة حتى لا تغطي العنوان
+  */
   padding: 34% 6% 8%;
 }
 /* =========================
@@ -174,7 +175,7 @@ form .btn {
 .organization {
   width: 100%;
   font-family: "Cairo", sans-serif;
-  font-size: 30px;
+  font-size: 20px;
   font-weight: 700;
   color: #545454;
   line-height: 1.55;
@@ -194,15 +195,17 @@ form .btn {
 .teacher-line {
   width: 100%;
   font-family: "Cairo", sans-serif;
-  font-size: 30px;
+  font-size: 20px;
   font-weight: 700;
   color: #545454;
   line-height: 1.6;
 }
-/* اسم المعلمة */
+/* =========================
+   اسم المعلمة
+   ========================= */
 .dynamic-name {
   font-family: "Cairo", sans-serif;
-  font-size: 30px;
+  font-size: 20px;
   font-weight: 700;
   color: #991529;
 }
@@ -212,7 +215,7 @@ form .btn {
 .main-text {
   width: 100%;
   font-family: "Cairo", sans-serif;
-  font-size: 30px;
+  font-size: 20px;
   font-weight: 700;
   color: #545454;
   line-height: 1.6;
@@ -223,15 +226,17 @@ form .btn {
 .category-line {
   width: 100%;
   font-family: "Cairo", sans-serif;
-  font-size: 30px;
+  font-size: 20px;
   font-weight: 700;
   color: #545454;
   line-height: 1.6;
 }
-/* الفئة */
+/* =========================
+   الفئة
+   ========================= */
 .dynamic-category {
   font-family: "Cairo", sans-serif;
-  font-size: 30px;
+  font-size: 20px;
   font-weight: 700;
   color: #991529;
 }
@@ -241,7 +246,7 @@ form .btn {
 .thanks {
   width: 100%;
   font-family: "Cairo", sans-serif;
-  font-size: 30px;
+  font-size: 20px;
   font-weight: 700;
   color: #545454;
   line-height: 1.6;

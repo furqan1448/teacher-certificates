@@ -1,40 +1,33 @@
-```css id="c8v4dn"
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap');
 * {
   box-sizing: border-box;
 }
-
 body {
   margin: 0;
-  font-family: Arial, Tahoma, sans-serif;
+  font-family: "Cairo", sans-serif;
   background: #f5f1ed;
   color: #352c29;
 }
-
-
 /* =========================
    الصفحة الرئيسية
    ========================= */
-
 .home {
   min-height: 100vh;
   display: grid;
   place-items: center;
   background: linear-gradient(135deg, #f7f0e9, #eee6df);
 }
-
 .home-card,
 .panel {
   background: #fff;
   border-radius: 24px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, .08);
 }
-
 .home-card {
   width: min(520px, 92%);
   padding: 48px 28px;
   text-align: center;
 }
-
 .logo-mark {
   width: 68px;
   height: 68px;
@@ -47,27 +40,21 @@ body {
   font-size: 30px;
   font-weight: bold;
 }
-
 .home-card h1 {
   margin: 18px 0 8px;
 }
-
 .home-card p,
 .muted {
   color: #7b706c;
 }
-
 .home-actions {
   display: grid;
   gap: 12px;
   margin-top: 30px;
 }
-
-
 /* =========================
    الأزرار
    ========================= */
-
 .btn {
   border: 0;
   border-radius: 12px;
@@ -78,55 +65,43 @@ body {
   text-decoration: none;
   text-align: center;
 }
-
 .primary {
   background: #6d2735;
   color: #fff;
 }
-
 .secondary {
   background: #eee7e2;
   color: #4a403c;
 }
-
-
 /* =========================
    الصفحات
    ========================= */
-
 .page {
   width: min(980px, 94%);
   margin: 40px auto;
 }
-
 .panel {
   padding: 30px;
   margin-bottom: 24px;
 }
-
 .login-panel {
   max-width: 520px;
   margin: 40px auto;
 }
-
 .back {
   display: inline-block;
   color: #6d2735;
   text-decoration: none;
   margin-bottom: 20px;
 }
-
-
 /* =========================
    الحقول
    ========================= */
-
 label {
   display: block;
   margin: 16px 0 7px;
   font-weight: 700;
 }
-
 input {
   width: 100%;
   padding: 13px;
@@ -135,273 +110,179 @@ input {
   font-size: 16px;
   background: #fff;
 }
-
 form .btn {
   width: 100%;
   margin-top: 22px;
 }
-
 .message {
   margin-top: 14px;
   min-height: 22px;
   color: #9a293d;
 }
-
 .hidden {
   display: none !important;
 }
-
-
 /* =========================
    الشهادة
    ========================= */
-
 .certificate-wrap {
   padding: 10px;
 }
-
 .certificate {
   position: relative;
-
   width: min(100%, 900px);
-
   aspect-ratio: 1414 / 2000;
-
   margin: auto;
-
   overflow: hidden;
-
   background: #fff;
-
   box-shadow: 0 10px 30px rgba(0, 0, 0, .12);
 }
-
-
-/* صورة الخلفية */
-
+/* خلفية الشهادة */
 .certificate-image {
   position: absolute;
-
   inset: 0;
-
   width: 100%;
   height: 100%;
-
   object-fit: cover;
-
   z-index: 1;
 }
-
-
 /* =========================
-   النص الموجود فوق الشهادة
+   نص الشهادة
    ========================= */
-
 .certificate-text {
   position: absolute;
-
   inset: 0;
-
   z-index: 2;
-
   display: flex;
-
   flex-direction: column;
-
   align-items: center;
-
   text-align: center;
-
   direction: rtl;
-
-  font-family: "Cairo", Arial, Tahoma, sans-serif;
-
-  /* حجم الخط */
-  font-size: 40px;
-
-  font-weight: 700;
-
-  color: #545454;
-
+  font-family: "Cairo", sans-serif;
   /*
-    نزلنا بداية النص إلى الأسفل
-    حتى لا يتعارض مع العنوان الموجود عندك
+    حجم الخط الأساسي
   */
-  padding: 25% 7% 8%;
-}
-
-
-/* =========================
-   تهنئة الجهة
-   ========================= */
-
-.organization {
-  line-height: 1.5;
-
-  color: #545454;
-
-  font-size: 40px;
-
+  font-size: 48px;
   font-weight: 700;
+  color: #545454;
+  /*
+    نزلنا النص أكثر حتى لا يغطي العنوان
+  */
+  padding: 34% 6% 8%;
 }
-
-
+/* =========================
+   التهنئة
+   ========================= */
+.organization {
+  font-family: "Cairo", sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  color: #545454;
+  line-height: 1.55;
+  width: 100%;
+}
 /* =========================
    المسافات
    ========================= */
-
 .certificate-space {
-  height: 8%;
+  height: 9%;
 }
-
 .certificate-space-small {
   height: 3%;
 }
-
-
 /* =========================
-   سطر الأستاذة
+   الأستاذة الفاضلة
    ========================= */
-
 .teacher-line {
   width: 100%;
-
-  line-height: 1.6;
-
+  font-family: "Cairo", sans-serif;
+  font-size: 48px;
+  font-weight: 700;
   color: #545454;
-
-  font-size: 40px;
-
-  font-weight: 700;
+  line-height: 1.6;
 }
-
-
 /* اسم المعلمة */
-
 .dynamic-name {
-  color: #991529;
-
-  font-size: 40px;
-
+  font-family: "Cairo", sans-serif;
+  font-size: 48px;
   font-weight: 700;
+  color: #991529;
 }
-
-
 /* =========================
-   النص الرئيسي
+   اختبار القياس
    ========================= */
-
 .main-text {
   width: 100%;
-
-  line-height: 1.6;
-
-  color: #545454;
-
-  font-size: 40px;
-
+  font-family: "Cairo", sans-serif;
+  font-size: 48px;
   font-weight: 700;
+  color: #545454;
+  line-height: 1.6;
 }
-
-
 /* =========================
    فئة التدريس
    ========================= */
-
 .category-line {
   width: 100%;
-
-  line-height: 1.6;
-
+  font-family: "Cairo", sans-serif;
+  font-size: 48px;
+  font-weight: 700;
   color: #545454;
-
-  font-size: 40px;
-
-  font-weight: 700;
+  line-height: 1.6;
 }
-
-
-/* الفئة نفسها */
-
+/* الفئة */
 .dynamic-category {
-  color: #991529;
-
-  font-size: 40px;
-
+  font-family: "Cairo", sans-serif;
+  font-size: 48px;
   font-weight: 700;
+  color: #991529;
 }
-
-
 /* =========================
    الدعاء
    ========================= */
-
 .thanks {
-  line-height: 1.6;
-
-  color: #545454;
-
-  font-size: 40px;
-
+  width: 100%;
+  font-family: "Cairo", sans-serif;
+  font-size: 48px;
   font-weight: 700;
+  color: #545454;
+  line-height: 1.6;
 }
-
-
 /* =========================
    أزرار الشهادة
    ========================= */
-
 .certificate-actions {
   display: flex;
-
   justify-content: center;
-
   gap: 10px;
-
   margin: 18px auto;
-
   max-width: 900px;
 }
-
 .certificate-actions .btn {
   flex: 1;
 }
-
-
 /* =========================
    الطباعة
    ========================= */
-
 @media print {
-
   body {
     background: #fff;
   }
-
   .page > *:not(#certificateSection) {
     display: none !important;
   }
-
   .certificate-wrap {
     display: block !important;
-
     padding: 0;
   }
-
   .certificate-actions {
     display: none !important;
   }
-
   .certificate {
     box-shadow: none;
-
     width: 100%;
-
     max-width: none;
-
     height: auto;
-
     aspect-ratio: 1414 / 2000;
   }
 }
-```

@@ -18,7 +18,7 @@ $("teacherForm").addEventListener("submit", async e => {
   const serial = $("password").value.trim().toUpperCase();
   if (phone.length !== 10 || !serial) {
     $("teacherMessage").textContent =
-      "تحققي من رقم الجوال والرقم التسلسلي.";
+      "تحققي من رقم الجوال وكلمة المرور.";
     return;
   }
   try {
@@ -55,4 +55,4 @@ $("teacherForm").addEventListener("submit", async e => {
 $("logoutBtn").addEventListener("click", () => {
   $("certificateSection").classList.add("hidden");
   $("teacherForm").reset();
-});
+})

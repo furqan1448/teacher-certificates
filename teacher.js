@@ -35,7 +35,7 @@ $("teacherForm").addEventListener("submit", async e => {
     const data = await response.json();
     if (!data.success) {
       $("teacherMessage").textContent =
-        "رقم الجوال أو الرقم التسلسلي غير صحيح.";
+        "رقم الجوال أو كلمة المرور غيرصحيحة.";
       return;
     }
     $("teacherName").textContent = data.name;

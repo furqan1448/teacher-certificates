@@ -289,25 +289,41 @@ form .btn {
 /* =========================
    الطباعة
    ========================= */
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
 @media print {
-  body {
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
     background: #fff;
+  }
+  .page {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
   .page > *:not(#certificateSection) {
     display: none !important;
   }
   .certificate-wrap {
     display: block !important;
-    padding: 0;
+    margin: 0 !important;
+    padding: 0 !important;
   }
   .certificate-actions {
     display: none !important;
   }
   .certificate {
     box-shadow: none;
-    width: 100%;
-    max-width: none;
-    height: auto;
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
     aspect-ratio: 1414 / 2000;
+    margin: 0 !important;
+    page-break-after: avoid;
+    page-break-inside: avoid;
   }
 }

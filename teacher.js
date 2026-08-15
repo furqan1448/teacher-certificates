@@ -56,3 +56,41 @@ $("logoutBtn").addEventListener("click", () => {
   $("certificateSection").classList.add("hidden");
   $("teacherForm").reset();
 })
+$("downloadPdfBtn").addEventListener("click", async () => {
+  const btn = $("downloadPdfBtn");
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "جارٍ التجهيز...";
+
+  try {
+    const certificateEl = $("certificate");
+
+    // نصوّر الشهادة بدقة عالية (scale: 3) لضمان وضوح النص عند الطباعة لاحقًا
+    const canvas = await html2canvas(certificateEl, {
+      scale: 3,
+      useCORS: true,
+      backgroundColor: "#ffffff",
+    });
+
+    const imgData = canvas.toDataURL("image/jpeg", 0.95);
+
+    const { jsPDF } = window.jspdf;
+    // حجم الصفحة بالسنتيمتر: 21 × 29.7 (نفس مقاس A4 في Canva) بدون أي هامش
+    const pdf = new jsPDF({
+      orientation: "portrait",
+      unit: "cm",
+      format: [21, 29.7],
+    });
+
+    pdf.addImage(imgData, "JPEG", 0, 0, 21, 29.7);
+
+    const teacherName = ($("teacherName").textContent || "المعلمة").trim();
+    pdf.save(`شهادة-اجتياز-${teacherName}.pdf`);
+  } catch (error) {
+    console.error(error);
+    alert("تعذر إنشاء ملف PDF، جرّبي زر الطباعة كبديل.");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+});

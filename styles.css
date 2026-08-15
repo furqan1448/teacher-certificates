@@ -136,8 +136,6 @@ form .btn {
   overflow: hidden;
   background: #fff;
   box-shadow: 0 10px 30px rgba(0, 0, 0, .12);
-  /* يجعل وحدات cqw أدناه مرتبطة بعرض الشهادة نفسها، فيكبر ويصغر الخط تلقائيًا معها */
-  container-type: inline-size;
 }
 /* =========================
    خلفية الشهادة
@@ -164,7 +162,7 @@ form .btn {
   direction: rtl;
   font-family: "Cairo", sans-serif;
   /* حجم الخط */
-  font-size: 4cqw;
+  font-size: var(--cert-font-size, 22px);
   font-weight: 700;
   color: #545454;
   /* نزلنا النص حتى لا يغطي العنوان */
@@ -176,7 +174,7 @@ form .btn {
 .organization {
   width: 100%;
   font-family: "Cairo", sans-serif;
-  font-size: 4cqw;
+  font-size: var(--cert-font-size, 22px);
   font-weight: 700;
   color: #545454;
   line-height: 1.55;
@@ -196,7 +194,7 @@ form .btn {
 .teacher-line {
   width: 100%;
   font-family: "Cairo", sans-serif;
-  font-size: 4cqw;
+  font-size: var(--cert-font-size, 22px);
   font-weight: 700;
   color: #545454;
   line-height: 1.6;
@@ -204,7 +202,7 @@ form .btn {
 /* اسم المعلمة */
 .dynamic-name {
   font-family: "Cairo", sans-serif;
-  font-size: 4cqw;
+  font-size: var(--cert-font-size, 22px);
   font-weight: 700;
   color: #991529;
 }
@@ -214,7 +212,7 @@ form .btn {
 .main-text {
   width: 100%;
   font-family: "Cairo", sans-serif;
-  font-size: 4cqw;
+  font-size: var(--cert-font-size, 22px);
   font-weight: 700;
   color: #545454;
   line-height: 1.6;
@@ -225,7 +223,7 @@ form .btn {
 .category-line {
   width: 100%;
   font-family: "Cairo", sans-serif;
-  font-size: 4cqw;
+  font-size: var(--cert-font-size, 22px);
   font-weight: 700;
   color: #545454;
   line-height: 1.6;
@@ -233,7 +231,7 @@ form .btn {
 /* الفئة */
 .dynamic-category {
   font-family: "Cairo", sans-serif;
-  font-size: 4cqw;
+  font-size: var(--cert-font-size, 22px);
   font-weight: 700;
   color: #991529;
 }
@@ -243,35 +241,10 @@ form .btn {
 .thanks {
   width: 100%;
   font-family: "Cairo", sans-serif;
-  font-size: 4cqw;
+  font-size: var(--cert-font-size, 22px);
   font-weight: 700;
   color: #545454;
   line-height: 1.6;
-}
-/* دعم احتياطي للمتصفحات القديمة التي لا تدعم وحدات cqw بعد */
-@supports not (font-size: 1cqw) {
-  .certificate-text,
-  .organization,
-  .teacher-line,
-  .dynamic-name,
-  .main-text,
-  .category-line,
-  .dynamic-category,
-  .thanks {
-    font-size: 22px;
-  }
-  @media (min-width: 420px) {
-    .certificate-text,
-    .organization,
-    .teacher-line,
-    .dynamic-name,
-    .main-text,
-    .category-line,
-    .dynamic-category,
-    .thanks {
-      font-size: calc(14px + 1.8vw);
-    }
-  }
 }
 /* =========================
    أزرار الشهادة
@@ -316,8 +289,11 @@ form .btn {
     padding: 0 !important;
   }
   .certificate-wrap {
-    display: block !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
     width: 210mm !important;
+    height: 297mm !important;
     margin: 0 !important;
     padding: 0 !important;
   }
@@ -326,11 +302,10 @@ form .btn {
   }
   .certificate {
     box-shadow: none;
-    /* أبعاد ثابتة بالمليمتر مطابقة لصفحة A4 بالضبط، بدل النسب المئوية التي قد تُقرَّب لأعلى */
-    width: 210mm !important;
-    height: 297mm !important;
+    width: 185mm !important;
+    height: auto !important;
     max-width: none !important;
-    aspect-ratio: auto !important;
+    aspect-ratio: 1414 / 2000;
     margin: 0 !important;
     overflow: hidden !important;
     page-break-after: avoid;

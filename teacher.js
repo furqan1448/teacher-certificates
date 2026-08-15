@@ -10,6 +10,19 @@ function normalizePhone(value) {
   }
   return p;
 }
+function syncCertificateFontSize() {
+  const cert = $("certificate");
+  if (!cert) return;
+  const width = cert.offsetWidth;
+  if (!width) return;
+  // نفس النسبة القديمة: 4% من عرض الشهادة الفعلي (بدل الاعتماد على cqw)
+  const fontSize = Math.round(width * 0.04);
+  cert.style.setProperty("--cert-font-size", fontSize + "px");
+}
+
+window.addEventListener("resize", syncCertificateFontSize);
+window.addEventListener("orientationchange", syncCertificateFontSize);
+
 $("teacherForm").addEventListener("submit", async e => {
   e.preventDefault();
   $("teacherMessage").textContent = "جارٍ التحقق...";
@@ -42,6 +55,7 @@ $("teacherForm").addEventListener("submit", async e => {
     $("teacherCategory").textContent = data.category;
     $("teacherMessage").textContent = "";
     $("certificateSection").classList.remove("hidden");
+    syncCertificateFontSize();
     window.scrollTo({
       top: document.body.scrollHeight,
       behavior: "smooth"
@@ -111,7 +125,7 @@ $("downloadPdfBtn").addEventListener("click", async () => {
     pdf.save(`شهادة-اجتياز-${teacherName}.pdf`);
   } catch (error) {
     console.error(error);
-    alert("تعذر إنشاء ملف PDF (تأكدي من اتصال الإنترنت)، جرّبي زر الطباعة كبديل.");
+    alert("تعذر إنشاء ملف PDF، تأكدي من اتصال الإنترنت وحاولي مرة أخرى.");
   } finally {
     btn.disabled = false;
     btn.textContent = originalText;

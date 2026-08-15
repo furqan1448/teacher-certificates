@@ -1,96 +1,201 @@
-const SHEETS_URL = "https://script.google.com/macros/s/AKfycbzyzBQfMjpi8-AQdjQQm58tZsZZdwqoEvoI3RvUZ7F3t4Nr3CQWZQh3fPNKznIJUtnH6Q/exec";
-const $ = id => document.getElementById(id);
-function normalizePhone(value) {
-  let p = String(value || "").replace(/\D/g, "");
-  if (p.startsWith("966")) {
-    p = "0" + p.slice(3);
-  }
-  if (p.length === 9) {
-    p = "0" + p;
-  }
-  return p;
-}
-$("teacherForm").addEventListener("submit", async e => {
-  e.preventDefault();
-  $("teacherMessage").textContent = "جارٍ التحقق...";
-  $("certificateSection").classList.add("hidden");
-  const phone = normalizePhone($("phone").value);
-  const serial = $("password").value.trim().toUpperCase();
-  if (phone.length !== 10 || !serial) {
-    $("teacherMessage").textContent =
-      "تحققي من رقم الجوال وكلمة المرور.";
-    return;
-  }
-  try {
-    const response = await fetch(SHEETS_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-      },
-      body: JSON.stringify({
-        phone: phone,
-        serial: serial
-      })
-    });
-    const data = await response.json();
-    if (!data.success) {
-      $("teacherMessage").textContent =
-        "رقم الجوال أو كلمة المرور غيرصحيحة.";
-      return;
-    }
-    $("teacherName").textContent = data.name;
-    $("teacherCategory").textContent = data.category;
-    $("teacherMessage").textContent = "";
-    $("certificateSection").classList.remove("hidden");
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: "smooth"
-    });
-  } catch (error) {
-    console.error(error);
-    $("teacherMessage").textContent =
-      "تعذر التحقق حاليًا. حاولي مرة أخرى.";
-  }
-});
-$("logoutBtn").addEventListener("click", () => {
-  $("certificateSection").classList.add("hidden");
-  $("teacherForm").reset();
-})
-$("downloadPdfBtn").addEventListener("click", async () => {
-  const btn = $("downloadPdfBtn");
-  const originalText = btn.textContent;
-  btn.disabled = true;
-  btn.textContent = "جارٍ التجهيز...";
+<!doctype html>
+<html lang="ar" dir="rtl">
 
-  try {
-    const certificateEl = $("certificate");
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    // نصوّر الشهادة بدقة عالية (scale: 3) لضمان وضوح النص عند الطباعة لاحقًا
-    const canvas = await html2canvas(certificateEl, {
-      scale: 3,
-      useCORS: true,
-      backgroundColor: "#ffffff",
-    });
+  <title>دخول المعلمة - شهادة اجتياز</title>
 
-    const imgData = canvas.toDataURL("image/jpeg", 0.95);
+  <link rel="stylesheet" href="styles.css">
+</head>
 
-    const { jsPDF } = window.jspdf;
-    // حجم الصفحة بالسنتيمتر: 21 × 29.7 (نفس مقاس A4 في Canva) بدون أي هامش
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "cm",
-      format: [21, 29.7],
-    });
+<body>
 
-    pdf.addImage(imgData, "JPEG", 0, 0, 21, 29.7);
+  <main class="page">
 
-    const teacherName = ($("teacherName").textContent || "المعلمة").trim();
-    pdf.save(`شهادة-اجتياز-${teacherName}.pdf`);
-  } catch (error) {
-    console.error(error);
-    alert("تعذر إنشاء ملف PDF، جرّبي زر الطباعة كبديل.");
-  } finally {
-    btn.disabled = false;
-    btn.textContent = originalText;
-  }
-});
+    <!-- تسجيل دخول المعلمة -->
+    <section class="panel login-panel">
+
+      <a class="back" href="index.html">
+        ← الرئيسية
+      </a>
+
+      <h1>دخول المعلمة</h1>
+
+      <p class="muted">
+        أدخلي رقم الجوال وكلمة المرور الخاصة بك.
+      </p>
+
+      <form id="teacherForm">
+
+        <label for="phone">
+          رقم الجوال
+        </label>
+
+        <input
+          id="phone"
+          type="text"
+          inputmode="numeric"
+          autocomplete="tel"
+          placeholder="05xxxxxxxx"
+          required
+        >
+
+        <label for="password">
+          كلمة المرور
+        </label>
+
+        <input
+          id="password"
+          type="text"
+          maxlength="4"
+          autocomplete="off"
+          placeholder="مثال: K7M2"
+          required
+        >
+
+        <button
+          class="btn primary"
+          type="submit"
+        >
+          عرض الشهادة
+        </button>
+
+        <div
+          id="teacherMessage"
+          class="message"
+        ></div>
+
+      </form>
+
+    </section>
+
+
+    <!-- =========================
+         الشهادة
+         ========================= -->
+
+    <section
+      id="certificateSection"
+      class="certificate-wrap hidden"
+    >
+
+      <div
+        id="certificate"
+        class="certificate"
+      >
+
+        <!-- الخلفية -->
+        <img
+          src="./certificate.png"
+          class="certificate-image"
+          alt="شهادة اجتياز"
+        >
+
+
+        <!-- النص فوق الشهادة -->
+
+        <div class="certificate-text">
+
+
+          <div class="organization">
+            تهنئ إدارة التعليم النسائي
+          </div>
+
+          <div class="organization">
+            بجمعية فرقان لتحفيظ القرآن الكريم
+          </div>
+
+
+          <div class="certificate-space"></div>
+
+
+          <div class="teacher-line">
+            الأستاذة الفاضلة/
+            <span
+              id="teacherName"
+              class="dynamic-name"
+            >
+              اسم المعلمة
+            </span>
+          </div>
+
+
+          <div class="certificate-space-small"></div>
+
+
+          <div class="main-text">
+            لاجتيازها اختبار قياس في القرآن الكريم
+          </div>
+
+
+          <div class="category-line">
+            فئة التدريس:
+            <span
+              id="teacherCategory"
+              class="dynamic-category"
+            >
+              الفئة
+            </span>
+          </div>
+
+
+          <div class="certificate-space-small"></div>
+
+
+          <div class="thanks">
+            سائلين الله لها التوفيق والسداد
+          </div>
+
+          <div class="thanks">
+            وأن يجعل القرآن حجةً لها لا عليها.
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- الأزرار -->
+
+      <div class="certificate-actions">
+
+        <button
+          class="btn primary"
+          id="downloadPdfBtn"
+        >
+          تحميل PDF
+        </button>
+
+        <button
+          class="btn secondary"
+          onclick="window.print()"
+        >
+          طباعة
+        </button>
+
+        <button
+          class="btn secondary"
+          id="logoutBtn"
+        >
+          تسجيل خروج
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script
+    type="module"
+    src="teacher.js"
+  ></script>
+
+</body>
+
+</html>

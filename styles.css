@@ -297,10 +297,13 @@ form .btn {
   html, body {
     margin: 0 !important;
     padding: 0 !important;
+    width: 210mm !important;
+    height: 297mm !important;
     background: #fff;
+    overflow: hidden !important;
   }
   .page {
-    width: 100% !important;
+    width: 210mm !important;
     max-width: none !important;
     margin: 0 !important;
     padding: 0 !important;
@@ -308,8 +311,13 @@ form .btn {
   .page > *:not(#certificateSection) {
     display: none !important;
   }
+  #certificateSection {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
   .certificate-wrap {
     display: block !important;
+    width: 210mm !important;
     margin: 0 !important;
     padding: 0 !important;
   }
@@ -318,12 +326,15 @@ form .btn {
   }
   .certificate {
     box-shadow: none;
-    width: 100% !important;
+    /* أبعاد ثابتة بالمليمتر مطابقة لصفحة A4 بالضبط، بدل النسب المئوية التي قد تُقرَّب لأعلى */
+    width: 210mm !important;
+    height: 297mm !important;
     max-width: none !important;
-    height: auto !important;
-    aspect-ratio: 1414 / 2000;
+    aspect-ratio: auto !important;
     margin: 0 !important;
+    overflow: hidden !important;
     page-break-after: avoid;
+    page-break-before: avoid;
     page-break-inside: avoid;
   }
 }

@@ -16,7 +16,7 @@ function syncCertificateFontSize() {
   const width = cert.offsetWidth;
   if (!width) return;
   // نفس النسبة القديمة: 4% من عرض الشهادة الفعلي (بدل الاعتماد على cqw)
-  const fontSize = Math.round(width * 0.038);
+  const fontSize = Math.round(width * 0.04);
   cert.style.setProperty("--cert-font-size", fontSize + "px");
 }
 

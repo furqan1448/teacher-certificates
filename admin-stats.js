@@ -1,6 +1,12 @@
 import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs";
+import { auth, db } from "./firebase-client.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import {
+  doc, setDoc, getDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const $ = id => document.getElementById(id);
+const STATS_DOC = doc(db, "stats", "examResults");
 
 function normalizeHeader(h) {
   return String(h || "").replace(/\s+/g, " ").trim();
@@ -9,6 +15,49 @@ function normalizeHeader(h) {
 function findColumn(headers, keyword) {
   return headers.findIndex(h => normalizeHeader(h).includes(keyword));
 }
+
+// عرض الإحصائيات في الصفحة (تُستخدم سواء بعد الرفع أو عند التحميل التلقائي)
+function renderStats(data) {
+  $("statTotal").textContent = data.total ?? "-";
+  $("statAvg").textContent = data.avg ?? "-";
+  $("statMax").textContent = data.max ?? "-";
+  $("statMin").textContent = data.min ?? "-";
+  renderTable("gradeTable", data.grades || {}, data.total || 1);
+  renderTable("categoryTable", data.categories || {}, data.total || 1);
+  $("statsResults").classList.remove("hidden");
+}
+
+function renderTable(tableId, counts, total) {
+  const table = $(tableId);
+  table.innerHTML = "";
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  for (const [label, count] of sorted) {
+    const tr = document.createElement("tr");
+    const tdLabel = document.createElement("td");
+    tdLabel.textContent = label;
+    const tdCount = document.createElement("td");
+    tdCount.textContent = `${count} (${((count / total) * 100).toFixed(1)}%)`;
+    tr.appendChild(tdLabel);
+    tr.appendChild(tdCount);
+    table.appendChild(tr);
+  }
+}
+
+// جلب آخر إحصائيات محفوظة وعرضها تلقائيًا عند فتح اللوحة
+async function loadSavedStats() {
+  try {
+    const snap = await getDoc(STATS_DOC);
+    if (snap.exists()) {
+      renderStats(snap.data());
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+onAuthStateChanged(auth, user => {
+  if (user) loadSavedStats();
+});
 
 $("statsBtn").addEventListener("click", async () => {
   const file = $("statsFile").files[0];
@@ -23,7 +72,6 @@ $("statsBtn").addEventListener("click", async () => {
     const data = await file.arrayBuffer();
     const workbook = XLSX.read(data, { type: "array" });
 
-    // نفضل ورقة "استمارة قياس" إن وجدت، وإلا نبحث عن أول ورقة فيها بيانات فعلية
     let sheetName = workbook.SheetNames.find(n => n.includes("استمارة قياس"));
     if (!sheetName) {
       sheetName = workbook.SheetNames.find(n => {
@@ -35,7 +83,6 @@ $("statsBtn").addEventListener("click", async () => {
 
     const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
 
-    // إيجاد صف العناوين (الصف اللي فيه "اسم المعلمة")
     const headerRowIndex = rows.findIndex(r =>
       r.some(c => normalizeHeader(c) === "اسم المعلمة")
     );
@@ -72,41 +119,24 @@ $("statsBtn").addEventListener("click", async () => {
 
     if (!total) throw new Error("EMPTY");
 
-    $("statTotal").textContent = total;
-    if (scores.length) {
-      const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
-      $("statAvg").textContent = avg.toFixed(2);
-      $("statMax").textContent = Math.max(...scores);
-      $("statMin").textContent = Math.min(...scores);
-    } else {
-      $("statAvg").textContent = "-";
-      $("statMax").textContent = "-";
-      $("statMin").textContent = "-";
-    }
+    const statsData = {
+      total,
+      avg: scores.length ? Number((scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2)) : null,
+      max: scores.length ? Math.max(...scores) : null,
+      min: scores.length ? Math.min(...scores) : null,
+      grades,
+      categories,
+      fileName: file.name,
+      updatedAt: serverTimestamp()
+    };
 
-    renderTable("gradeTable", grades, total);
-    renderTable("categoryTable", categories, total);
+    // حفظ في Firestore عشان أي شخص يفتح اللوحة يشوفها
+    await setDoc(STATS_DOC, statsData);
 
-    $("statsMessage").textContent = "";
-    $("statsResults").classList.remove("hidden");
+    renderStats(statsData);
+    $("statsMessage").textContent = "تم حفظ الإحصائيات، وراح تظهر تلقائيًا لأي شخص يفتح اللوحة.";
   } catch (error) {
     console.error(error);
     $("statsMessage").textContent = "تعذر تحليل الملف. تأكدي إن الأعمدة (اسم المعلمة، التقدير، الفئة المناسبة للتدريس) موجودة.";
   }
 });
-
-function renderTable(tableId, counts, total) {
-  const table = $(tableId);
-  table.innerHTML = "";
-  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-  for (const [label, count] of sorted) {
-    const tr = document.createElement("tr");
-    const tdLabel = document.createElement("td");
-    tdLabel.textContent = label;
-    const tdCount = document.createElement("td");
-    tdCount.textContent = `${count} (${((count / total) * 100).toFixed(1)}%)`;
-    tr.appendChild(tdLabel);
-    tr.appendChild(tdCount);
-    table.appendChild(tr);
-  }
-}

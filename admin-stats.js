@@ -1,12 +1,7 @@
 import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs";
-import { auth, db } from "./firebase-client.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-import {
-  doc, setDoc, getDoc, serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
+const STATS_URL = "https://script.google.com/macros/s/AKfycbx7wVhMZIHC3zpNATgyhjzR1xKHuqU7wkFoUXV2BmdxnKiLmOyXfWHpDz1FNnirpVG4/exec";
 const $ = id => document.getElementById(id);
-const STATS_DOC = doc(db, "stats", "examResults");
 
 function normalizeHeader(h) {
   return String(h || "").replace(/\s+/g, " ").trim();
@@ -16,7 +11,6 @@ function findColumn(headers, keyword) {
   return headers.findIndex(h => normalizeHeader(h).includes(keyword));
 }
 
-// عرض الإحصائيات في الصفحة (تُستخدم سواء بعد الرفع أو عند التحميل التلقائي)
 function renderStats(data) {
   $("statTotal").textContent = data.total ?? "-";
   $("statAvg").textContent = data.avg ?? "-";
@@ -43,21 +37,17 @@ function renderTable(tableId, counts, total) {
   }
 }
 
-// جلب آخر إحصائيات محفوظة وعرضها تلقائيًا عند فتح اللوحة
+// جلب آخر إحصائيات محفوظة في Google Sheet وعرضها تلقائيًا
 async function loadSavedStats() {
   try {
-    const snap = await getDoc(STATS_DOC);
-    if (snap.exists()) {
-      renderStats(snap.data());
-    }
+    const response = await fetch(STATS_URL);
+    const data = await response.json();
+    if (data.exists) renderStats(data);
   } catch (error) {
     console.error(error);
   }
 }
-
-onAuthStateChanged(auth, user => {
-  if (user) loadSavedStats();
-});
+loadSavedStats();
 
 $("statsBtn").addEventListener("click", async () => {
   const file = $("statsFile").files[0];
@@ -126,12 +116,15 @@ $("statsBtn").addEventListener("click", async () => {
       min: scores.length ? Math.min(...scores) : null,
       grades,
       categories,
-      fileName: file.name,
-      updatedAt: serverTimestamp()
+      fileName: file.name
     };
 
-    // حفظ في Firestore عشان أي شخص يفتح اللوحة يشوفها
-    await setDoc(STATS_DOC, statsData);
+    // حفظ في Google Sheet عشان يظهر لأي شخص يفتح اللوحة
+    await fetch(STATS_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(statsData)
+    });
 
     renderStats(statsData);
     $("statsMessage").textContent = "تم حفظ الإحصائيات، وراح تظهر تلقائيًا لأي شخص يفتح اللوحة.";

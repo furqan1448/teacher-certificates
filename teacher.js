@@ -15,7 +15,6 @@ function syncCertificateFontSize() {
   if (!cert) return;
   const width = cert.offsetWidth;
   if (!width) return;
-  // نفس النسبة القديمة: 4% من عرض الشهادة الفعلي (بدل الاعتماد على cqw)
   const fontSize = Math.round(width * 0.04);
   cert.style.setProperty("--cert-font-size", fontSize + "px");
 }
@@ -73,7 +72,6 @@ $("logoutBtn").addEventListener("click", () => {
 
 function loadScript(src) {
   return new Promise((resolve, reject) => {
-    // لو المكتبة محمّلة مسبقًا لا نعيد تحميلها
     if (document.querySelector(`script[src="${src}"]`)) {
       resolve();
       return;
@@ -93,8 +91,6 @@ $("downloadPdfBtn").addEventListener("click", async () => {
   btn.textContent = "جارٍ التحميل...";
 
   try {
-    // نحمّل المكتبتين فقط الآن عند الحاجة الفعلية، حتى لا تتأثر صفحة الدخول
-    // إذا كانت الشبكة بطيئة أو محجوبة عن هذا المصدر
     await loadScript("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
     await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
 
@@ -102,7 +98,6 @@ $("downloadPdfBtn").addEventListener("click", async () => {
 
     const certificateEl = $("certificate");
 
-    // نصوّر الشهادة بدقة عالية (scale: 3) لضمان وضوح النص عند الطباعة لاحقًا
     const canvas = await html2canvas(certificateEl, {
       scale: 3,
       useCORS: true,
@@ -112,7 +107,6 @@ $("downloadPdfBtn").addEventListener("click", async () => {
     const imgData = canvas.toDataURL("image/jpeg", 0.95);
 
     const { jsPDF } = window.jspdf;
-    // حجم الصفحة بالسنتيمتر: 21 × 29.7 (نفس مقاس A4 في Canva) بدون أي هامش
     const pdf = new jsPDF({
       orientation: "portrait",
       unit: "cm",

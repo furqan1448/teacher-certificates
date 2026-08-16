@@ -1,91 +1,80 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>دخول الإدارة - شهادة اجتياز</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <main class="page">
-    <section id="loginPanel" class="panel login-panel">
-      <a class="back" href="index.html">← الرئيسية</a>
-      <h1>دخول الإدارة</h1>
-      <p class="muted">الدخول مخصص لحساب الإدارة.</p>
-      <form id="adminLoginForm">
-        <label>البريد الإلكتروني</label>
-        <input id="email" type="email" autocomplete="username" required>
-        <label>كلمة المرور</label>
-        <input id="adminPassword" type="password" autocomplete="current-password" required>
-        <button class="btn primary" type="submit">دخول</button>
-        <div id="loginMessage" class="message"></div>
-      </form>
-    </section>
+import "./firebase-client.js";
+import { auth, db } from "./firebase-client.js";
+import {
+  onAuthStateChanged, signInWithEmailAndPassword, signOut
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import {
+  collection, doc, setDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs";
 
-    <section id="adminPanel" class="panel hidden">
-      <div class="admin-head">
-        <div>
-          <h1>لوحة الإدارة</h1>
-          <p class="muted">رفع ملف Excel دفعة واحدة.</p>
-        </div>
-        <button id="logout" class="btn secondary">تسجيل خروج</button>
-      </div>
+const $ = id => document.getElementById(id);
+const loginPanel = $("loginPanel");
+const adminPanel = $("adminPanel");
 
-      <div class="upload-box">
-        <h2>رفع قاعدة بيانات المعلمات</h2>
-        <p>الملف المتوقع يحتوي على: كلمة المرور، اسم المعلمة، الفئة المناسبة للتدريس، رقم الجوال.</p>
-        <input id="excelFile" type="file" accept=".xlsx,.xls,.csv">
-        <button id="importBtn" class="btn primary">رفع وحفظ البيانات</button>
-        <div id="importMessage" class="message"></div>
-      </div>
+onAuthStateChanged(auth, user => {
+  if (user) {
+    loginPanel.classList.add("hidden");
+    adminPanel.classList.remove("hidden");
+  } else {
+    loginPanel.classList.remove("hidden");
+    adminPanel.classList.add("hidden");
+  }
+});
 
-      <div class="warning">
-        <strong>تنبيه:</strong> ارفعي ملف البيانات الحقيقي من داخل حساب الإدارة فقط.
-      </div>
+$("adminLoginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  $("loginMessage").textContent = "جارٍ تسجيل الدخول...";
+  try {
+    await signInWithEmailAndPassword(auth, $("email").value.trim(), $("adminPassword").value);
+    $("loginMessage").textContent = "";
+  } catch (err) {
+    $("loginMessage").textContent = "تعذر تسجيل الدخول. تأكدي من البريد وكلمة المرور.";
+  }
+});
 
-      <!-- ========================
-           إحصائيات نتائج الاختبار
-           ======================== -->
-      <div class="upload-box">
-        <h2>إحصائيات نتائج الاختبار</h2>
-        <p>ارفعي ملف "استمارة قياس" وراح تظهر الإحصائيات تلقائيًا (عدد المختبرات، التقدير، الفئات، الدرجات).</p>
-        <input id="statsFile" type="file" accept=".xlsx,.xls">
-        <button id="statsBtn" class="btn primary">عرض الإحصائيات</button>
-        <div id="statsMessage" class="message"></div>
+$("logout").addEventListener("click", () => signOut(auth));
 
-        <div id="statsResults" class="stats-results hidden">
+$("importBtn").addEventListener("click", async () => {
+  const file = $("excelFile").files[0];
+  if (!file) {
+    $("importMessage").textContent = "اختاري ملف Excel أولًا.";
+    return;
+  }
+  $("importMessage").textContent = "جارٍ قراءة الملف وحفظ البيانات...";
+  try {
+    const data = await file.arrayBuffer();
+    const workbook = XLSX.read(data, {type: "array"});
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet, {defval: ""});
 
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-value" id="statTotal">-</div>
-              <div class="stat-title">عدد المختبرات</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value" id="statAvg">-</div>
-              <div class="stat-title">متوسط الدرجات</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value" id="statMax">-</div>
-              <div class="stat-title">أعلى درجة</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value" id="statMin">-</div>
-              <div class="stat-title">أقل درجة</div>
-            </div>
-          </div>
+    if (!rows.length) throw new Error("EMPTY");
 
-          <h3>التقدير</h3>
-          <table class="stats-table" id="gradeTable"></table>
+    let count = 0;
+    for (const row of rows) {
+      const password = String(row["م"] ?? row["كلمة المرور"] ?? row["الرمز"] ?? "").trim().toUpperCase();
+      const name = String(row["اسم المعلمة"] ?? "").trim();
+      const category = String(row["الفئة المناسبة للتدريس"] ?? row["الفئة"] ?? "").trim();
+      let phone = String(row["رقم الجوال"] ?? row["الجوال"] ?? "").replace(/\D/g, "");
 
-          <h3>الفئة المناسبة للتدريس</h3>
-          <table class="stats-table" id="categoryTable"></table>
+      if (phone.length === 9) phone = "0" + phone;
+      if (!password || !name || !phone) continue;
 
-        </div>
-      </div>
-
-    </section>
-  </main>
-  <script type="module" src="admin.js"></script>
-  <script type="module" src="admin-stats.js"></script>
-</body>
-</html>
+      // لا نستخدم رقم الجوال كـ document ID حتى لا يصبح سهل التخمين.
+      // يتم إنشاء معرف عشوائي لكل سجل.
+      const ref = doc(collection(db, "teachers"));
+      await setDoc(ref, {
+        password,
+        name,
+        category,
+        phone,
+        createdAt: serverTimestamp()
+      });
+      count++;
+    }
+    $("importMessage").textContent = `تم حفظ ${count} سجل بنجاح.`;
+  } catch (err) {
+    console.error(err);
+    $("importMessage").textContent = "حدث خطأ أثناء قراءة الملف أو الحفظ.";
+  }
+});

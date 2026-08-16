@@ -11,6 +11,15 @@ function findColumn(headers, keyword) {
   return headers.findIndex(h => normalizeHeader(h).includes(keyword));
 }
 
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(",")[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 function renderStats(data) {
   $("statTotal").textContent = data.total ?? "-";
   $("statAvg").textContent = data.avg ?? "-";
@@ -18,6 +27,16 @@ function renderStats(data) {
   $("statMin").textContent = data.min ?? "-";
   renderTable("gradeTable", data.grades || {}, data.total || 1);
   renderTable("categoryTable", data.categories || {}, data.total || 1);
+
+  const downloadLink = $("downloadFileLink");
+  if (data.fileUrl) {
+    downloadLink.href = data.fileUrl;
+    downloadLink.textContent = `تحميل الملف الأصلي (${data.fileName || "الملف"})`;
+    downloadLink.classList.remove("hidden");
+  } else {
+    downloadLink.classList.add("hidden");
+  }
+
   $("statsResults").classList.remove("hidden");
 }
 
@@ -37,7 +56,6 @@ function renderTable(tableId, counts, total) {
   }
 }
 
-// جلب آخر إحصائيات محفوظة في Google Sheet وعرضها تلقائيًا
 async function loadSavedStats() {
   try {
     const response = await fetch(STATS_URL);
@@ -59,8 +77,8 @@ $("statsBtn").addEventListener("click", async () => {
   $("statsResults").classList.add("hidden");
 
   try {
-    const data = await file.arrayBuffer();
-    const workbook = XLSX.read(data, { type: "array" });
+    const arrayBuffer = await file.arrayBuffer();
+    const workbook = XLSX.read(arrayBuffer, { type: "array" });
 
     let sheetName = workbook.SheetNames.find(n => n.includes("استمارة قياس"));
     if (!sheetName) {
@@ -109,6 +127,9 @@ $("statsBtn").addEventListener("click", async () => {
 
     if (!total) throw new Error("EMPTY");
 
+    $("statsMessage").textContent = "جارٍ رفع الملف وحفظ الإحصائيات...";
+    const fileBase64 = await fileToBase64(file);
+
     const statsData = {
       total,
       avg: scores.length ? Number((scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2)) : null,
@@ -116,20 +137,22 @@ $("statsBtn").addEventListener("click", async () => {
       min: scores.length ? Math.min(...scores) : null,
       grades,
       categories,
-      fileName: file.name
+      fileName: file.name,
+      fileBase64,
+      mimeType: file.type
     };
 
-    // حفظ في Google Sheet عشان يظهر لأي شخص يفتح اللوحة
-    await fetch(STATS_URL, {
+    const response = await fetch(STATS_URL, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(statsData)
     });
+    const result = await response.json();
 
-    renderStats(statsData);
-    $("statsMessage").textContent = "تم حفظ الإحصائيات، وراح تظهر تلقائيًا لأي شخص يفتح اللوحة.";
+    renderStats({ ...statsData, fileUrl: result.fileUrl });
+    $("statsMessage").textContent = "تم حفظ الإحصائيات والملف، وراح تظهر تلقائيًا لأي شخص يفتح اللوحة.";
   } catch (error) {
     console.error(error);
-    $("statsMessage").textContent = "تعذر تحليل الملف. تأكدي إن الأعمدة (اسم المعلمة، التقدير، الفئة المناسبة للتدريس) موجودة.";
+    $("statsMessage").textContent = "تعذر تحليل الملف أو رفعه. تأكدي إن الأعمدة (اسم المعلمة، التقدير، الفئة المناسبة للتدريس) موجودة.";
   }
 });

@@ -151,92 +151,28 @@ form .btn {
   z-index: 2;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
+  gap: 4.5%;
   text-align: center;
   direction: rtl;
   font-family: "Cairo", sans-serif;
   font-size: var(--cert-font-size, 22px);
   font-weight: 700;
   color: #545454;
-  padding: 34% 6% 8%;
+  padding: 40% 8% 22%;
 }
-/* =========================
-   التهنئة
-   ========================= */
-.organization {
-  width: 100%;
-  font-family: "Cairo", sans-serif;
-  font-size: var(--cert-font-size, 22px);
-  font-weight: 700;
-  color: #545454;
-  line-height: 1.55;
-}
-/* =========================
-   المسافات
-   ========================= */
-.certificate-space {
-  height: 9%;
-}
-.certificate-space-small {
-  height: 3%;
-}
-/* =========================
-   الأستاذة الفاضلة
-   ========================= */
-.teacher-line {
-  width: 100%;
-  font-family: "Cairo", sans-serif;
-  font-size: var(--cert-font-size, 22px);
-  font-weight: 700;
-  color: #545454;
-  line-height: 1.6;
-}
-/* اسم المعلمة */
-.dynamic-name {
-  font-family: "Cairo", sans-serif;
-  font-size: var(--cert-font-size, 22px);
-  font-weight: 700;
-  color: #991529;
-}
-/* =========================
-   اختبار القياس
-   ========================= */
-.main-text {
-  width: 100%;
-  font-family: "Cairo", sans-serif;
-  font-size: var(--cert-font-size, 22px);
-  font-weight: 700;
-  color: #545454;
-  line-height: 1.6;
-}
-/* =========================
-   فئة التدريس
-   ========================= */
-.category-line {
-  width: 100%;
-  font-family: "Cairo", sans-serif;
-  font-size: var(--cert-font-size, 22px);
-  font-weight: 700;
-  color: #545454;
-  line-height: 1.6;
-}
-/* الفئة */
-.dynamic-category {
-  font-family: "Cairo", sans-serif;
-  font-size: var(--cert-font-size, 22px);
-  font-weight: 700;
-  color: #991529;
-}
-/* =========================
-   الدعاء
-   ========================= */
+.organization,
+.teacher-line,
+.main-text,
+.category-line,
 .thanks {
   width: 100%;
-  font-family: "Cairo", sans-serif;
-  font-size: var(--cert-font-size, 22px);
-  font-weight: 700;
-  color: #545454;
-  line-height: 1.6;
+  line-height: 1.7;
+}
+.dynamic-name,
+.dynamic-category {
+  color: #991529;
 }
 /* =========================
    أزرار الشهادة

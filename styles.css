@@ -117,6 +117,35 @@ form .btn {
   display: none !important;
 }
 /* =========================
+   لوحة الإدارة
+   ========================= */
+.admin-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.upload-box {
+  background: #f7f2ee;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.upload-box h2 {
+  margin-top: 0;
+}
+.upload-box input[type="file"] {
+  margin: 10px 0;
+}
+.warning {
+  background: #fdf1e7;
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: #7b5c2e;
+}
+/* =========================
    الشهادة
    ========================= */
 .certificate-wrap {
@@ -188,6 +217,48 @@ form .btn {
   flex: 1;
 }
 /* =========================
+   صندوق الإحصائيات
+   ========================= */
+.stats-results {
+  margin-top: 24px;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+}
+.stat-value {
+  font-size: 26px;
+  font-weight: 700;
+  color: #6d2735;
+}
+.stat-title {
+  margin-top: 6px;
+  color: #7b706c;
+  font-size: 14px;
+}
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+.stats-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee7e2;
+}
+.stats-table td:last-child {
+  text-align: left;
+  font-weight: 700;
+  color: #6d2735;
+}
+/* =========================
    الطباعة
    ========================= */
 @page {
@@ -240,46 +311,4 @@ form .btn {
     page-break-before: avoid;
     page-break-inside: avoid;
   }
-}
-/* =========================
-   صندوق الإحصائيات
-   ========================= */
-.stats-results {
-  margin-top: 24px;
-}
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: 12px;
-  margin-bottom: 20px;
-}
-.stat-card {
-  background: #f7f2ee;
-  border-radius: 14px;
-  padding: 16px;
-  text-align: center;
-}
-.stat-value {
-  font-size: 26px;
-  font-weight: 700;
-  color: #6d2735;
-}
-.stat-title {
-  margin-top: 6px;
-  color: #7b706c;
-  font-size: 14px;
-}
-.stats-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
-.stats-table td {
-  padding: 10px 12px;
-  border-bottom: 1px solid #eee7e2;
-}
-.stats-table td:last-child {
-  text-align: left;
-  font-weight: 700;
-  color: #6d2735;
 }

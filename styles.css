@@ -161,11 +161,9 @@ form .btn {
   text-align: center;
   direction: rtl;
   font-family: "Cairo", sans-serif;
-  /* حجم الخط */
   font-size: var(--cert-font-size, 22px);
   font-weight: 700;
   color: #545454;
-  /* نزلنا النص حتى لا يغطي العنوان */
   padding: 34% 6% 8%;
 }
 /* =========================

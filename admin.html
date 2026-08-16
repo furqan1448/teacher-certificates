@@ -42,8 +42,50 @@
       <div class="warning">
         <strong>تنبيه:</strong> ارفعي ملف البيانات الحقيقي من داخل حساب الإدارة فقط.
       </div>
+
+      <!-- ========================
+           إحصائيات نتائج الاختبار
+           ======================== -->
+      <div class="upload-box">
+        <h2>إحصائيات نتائج الاختبار</h2>
+        <p>ارفعي ملف "استمارة قياس" وراح تظهر الإحصائيات تلقائيًا (عدد المختبرات، التقدير، الفئات، الدرجات).</p>
+        <input id="statsFile" type="file" accept=".xlsx,.xls">
+        <button id="statsBtn" class="btn primary">عرض الإحصائيات</button>
+        <div id="statsMessage" class="message"></div>
+
+        <div id="statsResults" class="stats-results hidden">
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-value" id="statTotal">-</div>
+              <div class="stat-title">عدد المختبرات</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="statAvg">-</div>
+              <div class="stat-title">متوسط الدرجات</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="statMax">-</div>
+              <div class="stat-title">أعلى درجة</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="statMin">-</div>
+              <div class="stat-title">أقل درجة</div>
+            </div>
+          </div>
+
+          <h3>التقدير</h3>
+          <table class="stats-table" id="gradeTable"></table>
+
+          <h3>الفئة المناسبة للتدريس</h3>
+          <table class="stats-table" id="categoryTable"></table>
+
+        </div>
+      </div>
+
     </section>
   </main>
   <script type="module" src="admin.js"></script>
+  <script type="module" src="admin-stats.js"></script>
 </body>
 </html>

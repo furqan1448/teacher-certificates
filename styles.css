@@ -29,16 +29,10 @@ body {
   text-align: center;
 }
 .logo-mark {
-  width: 68px;
-  height: 68px;
-  margin: auto;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: #6d2735;
-  color: #fff;
-  font-size: 26px;
-  font-weight: bold;
+  width: 96px;
+  height: auto;
+  margin: 0 auto 6px;
+  display: block;
 }
 .home-card h1 {
   margin: 18px 0 8px;

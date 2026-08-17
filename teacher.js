@@ -53,6 +53,7 @@ $("teacherForm").addEventListener("submit", async e => {
     $("teacherName").textContent = data.name;
     $("teacherCategory").textContent = data.category;
     $("teacherMessage").textContent = "";
+    $("loginPanel").classList.add("hidden");
     $("certificateSection").classList.remove("hidden");
     syncCertificateFontSize();
     window.scrollTo({
@@ -65,10 +66,6 @@ $("teacherForm").addEventListener("submit", async e => {
       "تعذر التحقق حاليًا. حاولي مرة أخرى.";
   }
 });
-$("logoutBtn").addEventListener("click", () => {
-  $("certificateSection").classList.add("hidden");
-  $("teacherForm").reset();
-})
 
 function loadScript(src) {
   return new Promise((resolve, reject) => {

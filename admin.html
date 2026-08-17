@@ -32,6 +32,28 @@
       </div>
 
       <!-- ========================
+           للاطلاع على التفاصيل
+           ======================== -->
+      <div class="details-box" id="detailsBox">
+        <div class="details-box-head">
+          <div class="details-box-title">
+            <span class="details-icon">🔗</span>
+            <span>للاطلاع على التفاصيل</span>
+          </div>
+          <button id="editDetailsLink" class="link-btn" type="button">تعديل الرابط</button>
+        </div>
+
+        <a id="detailsLinkOpen" class="btn primary details-open-btn hidden" target="_blank" rel="noopener">للاطلاع على التفاصيل</a>
+        <p id="detailsLinkEmpty" class="muted">لم يتم إضافة رابط بعد.</p>
+
+        <div id="detailsLinkEditRow" class="details-edit-row hidden">
+          <input id="detailsLinkInput" type="url" placeholder="https://...">
+          <button id="saveDetailsLink" class="btn primary" type="button">حفظ</button>
+        </div>
+        <div id="detailsLinkMsg" class="message"></div>
+      </div>
+
+      <!-- ========================
            إحصائيات نتائج الاختبار
            ======================== -->
       <div class="upload-box">

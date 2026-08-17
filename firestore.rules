@@ -3,8 +3,14 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // المشروع حاليًا لا يستخدم Firestore لتخزين أي بيانات؛
-    // Firebase يُستخدم فقط لتسجيل دخول الإدارة (Authentication).
+    // رابط "للاطلاع على التفاصيل" في لوحة الإدارة
+    // يسمح لأي مستخدم مسجّل دخول (حساب الإدارة) بقراءته وتعديله.
+    match /settings/detailsLink {
+      allow read, write: if request.auth != null;
+    }
+
+    // باقي المشروع لا يستخدم Firestore لتخزين بيانات أخرى؛
+    // Firebase يُستخدم أيضًا لتسجيل دخول الإدارة (Authentication).
     // بيانات المعلمات والإحصائيات كلها في Google Sheets.
     match /{document=**} {
       allow read, write: if false;

@@ -29,7 +29,7 @@ body {
   text-align: center;
 }
 .logo-mark {
-  width: 96px;
+  width: 150px;
   height: auto;
   margin: 0 auto 6px;
   display: block;
@@ -132,6 +132,62 @@ form .btn {
   border-radius: 16px;
   padding: 20px;
   margin-bottom: 20px;
+}
+/* =========================
+   للاطلاع على التفاصيل
+   ========================= */
+.details-box {
+  background: #f7f2ee;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.details-box-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.details-box-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: #6d2735;
+  font-size: 17px;
+}
+.details-icon {
+  font-size: 20px;
+}
+.link-btn {
+  background: none;
+  border: none;
+  color: #6d2735;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  font-size: 14px;
+}
+.details-open-btn {
+  display: inline-block;
+}
+.details-edit-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.details-edit-row input {
+  flex: 1;
+  min-width: 200px;
+}
+.details-edit-row .btn {
+  flex: 0 0 auto;
+  width: auto;
+  margin-top: 0;
 }
 .upload-box h2 {
   margin-top: 0;

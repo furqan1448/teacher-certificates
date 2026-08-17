@@ -1,11 +1,12 @@
 import "./firebase-client.js";
-import { auth, db } from "./firebase-client.js";
+import { auth } from "./firebase-client.js";
 import {
   onAuthStateChanged, signInWithEmailAndPassword, signOut
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-import {
-  doc, getDoc, setDoc
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+// رابط تطبيق الويب (Web app) الخاص بقوقل شيت — يُلصق هنا بعد نشر
+// كود google-apps-script.gs. يجب أن ينتهي بـ /exec
+const DETAILS_LINK_SHEET_URL = "https://script.google.com/macros/s/AKfycbw2y27LGfTTfHWTKHQFtmIIuzz5Gs_8MeLsWl2jkScfzLgXSO0LBL1__7P2ghikjVg/exec";
 
 const $ = id => document.getElementById(id);
 const loginPanel = $("loginPanel");
@@ -23,7 +24,7 @@ onAuthStateChanged(auth, user => {
 });
 
 // ========================
-// للاطلاع على التفاصيل
+// للاطلاع على التفاصيل (مرتبط بقوقل شيت)
 // ========================
 const detailsLinkOpen = $("detailsLinkOpen");
 const detailsLinkEmpty = $("detailsLinkEmpty");
@@ -45,12 +46,16 @@ function renderDetailsLink(url) {
 }
 
 async function loadDetailsLink() {
+  if (DETAILS_LINK_SHEET_URL.includes("PASTE_YOUR")) {
+    detailsLinkMsg.textContent = "لم يتم ربط قوقل شيت بعد.";
+    return;
+  }
   try {
-    const snap = await getDoc(doc(db, "settings", "detailsLink"));
-    const url = snap.exists() ? (snap.data().url || "") : "";
-    renderDetailsLink(url);
+    const res = await fetch(DETAILS_LINK_SHEET_URL);
+    const data = await res.json();
+    renderDetailsLink(data.url || "");
   } catch (err) {
-    detailsLinkMsg.textContent = "تعذر تحميل الرابط.";
+    detailsLinkMsg.textContent = "تعذر تحميل الرابط من قوقل شيت.";
   }
 }
 
@@ -59,10 +64,19 @@ $("editDetailsLink").addEventListener("click", () => {
 });
 
 $("saveDetailsLink").addEventListener("click", async () => {
+  if (DETAILS_LINK_SHEET_URL.includes("PASTE_YOUR")) {
+    detailsLinkMsg.textContent = "لم يتم ربط قوقل شيت بعد.";
+    return;
+  }
   const url = detailsLinkInput.value.trim();
   detailsLinkMsg.textContent = "جارٍ الحفظ...";
   try {
-    await setDoc(doc(db, "settings", "detailsLink"), { url });
+    // نستخدم text/plain لتفادي مشاكل CORS مع Apps Script
+    await fetch(DETAILS_LINK_SHEET_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ url })
+    });
     renderDetailsLink(url);
     detailsLinkEditRow.classList.add("hidden");
     detailsLinkMsg.textContent = "تم الحفظ.";

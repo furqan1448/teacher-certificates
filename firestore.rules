@@ -3,10 +3,25 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // المشروع حاليًا لا يستخدم Firestore لتخزين أي بيانات؛
-    // Firebase يُستخدم فقط لتسجيل دخول الإدارة (Authentication).
-    // رابط "للاطلاع على التفاصيل" وبيانات المعلمات والإحصائيات
-    // كلها في Google Sheets.
+    // بيانات المعلمات: كل معلمة = مستند واحد، معرّفه رقم جوالها
+    // (بعد تطبيع الرقم إلى صيغة 05xxxxxxxx). صفحة teacher.js تقرأ
+    // مستندًا واحدًا فقط بمعرفه (get) وتقارن كلمة المرور في الجهاز،
+    // وهذا سريع جدًا مقارنة بمناداة Apps Script.
+    // "allow list: if false" يمنع أي زائر من سحب كل قائمة المعلمات
+    // دفعة واحدة — يقدر فقط يقرأ مستند رقم جوال يعرفه مسبقًا.
+    // الكتابة ممنوعة من المتصفح بالكامل؛ المزامنة من قوقل شيت
+    // تتم عبر Apps Script بحساب خدمة (service account) يستخدم
+    // صلاحيات Google Cloud IAM مباشرة، وهذا النوع من الوصول
+    // لا تطبَّق عليه قواعد Firestore أصلاً.
+    match /teachers/{phone} {
+      allow get: if true;
+      allow list: if false;
+      allow write: if false;
+    }
+
+    // باقي المشروع: Firebase يُستخدم فقط لتسجيل دخول الإدارة
+    // (Authentication)، ورابط "للاطلاع على التفاصيل" والإحصائيات
+    // ما زالت في Google Sheets.
     match /{document=**} {
       allow read, write: if false;
     }

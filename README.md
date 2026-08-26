@@ -11,9 +11,24 @@
 - الفئة المناسبة للتدريس
 - رقم الجوال
 
-## مهم جدًا قبل النشر
-النسخة الحالية فيها كود استيراد إداري يعمل مع Authentication، لكن تحقق المعلمة في `teacher.js` يستخدم Firestore مباشرة لأغراض الاختبار.
-للإنتاج، استخدمي Cloud Function `verifyTeacher` الموجودة في `functions/index.js`، ثم اجعلي قراءة `teachers` ممنوعة للزوار بالكامل في Firestore Rules.
+## دخول المعلمة (سريع، عبر Firestore)
+`teacher.js` الآن يقرأ مستند المعلمة مباشرة من Firestore (مجموعة `teachers`،
+معرّف المستند = رقم جوالها بصيغة 05xxxxxxxx) بدل مناداة Apps Script في كل
+مرة — قراءة مستند واحد بدل انتظار سكريبت، فرق الوقت كبير.
+
+بيانات المعلمات نفسها تتحدث تلقائيًا من قوقل شيت عبر
+`google-apps-script-sync.gs` (خطوات الإعداد بالتفصيل داخل الملف):
+1. أنشئي Service Account بصلاحية Firestore على نفس مشروع Firebase.
+2. حطّي client_email و private_key بـ Script Properties بمحرر Apps Script.
+3. شغّلي `setupTriggers()` مرة وحدة لتفعيل المزامنة (عند أي تعديل بالشيت + كل 30 دقيقة).
+
+`firestore.rules` تسمح بقراءة مستند معلمة واحد بمعرفه فقط (get)، وتمنع
+سحب كل القائمة (list) أو أي كتابة من المتصفح — الكتابة تتم فقط عبر
+حساب الخدمة من Apps Script.
+
+Cloud Function `verifyTeacher` بـ `functions/index.js` صارت غير مستخدمة
+بهذا الأسلوب ويمكن تجاهلها (أو حذفها لاحقًا) طالما دخول المعلمة يعتمد
+على Firestore مباشرة.
 
 ## إعداد Firebase
 1. في Firebase > Project settings > App1 > SDK setup and configuration > Config.

@@ -1,4 +1,6 @@
-const SHEETS_URL = "https://script.google.com/macros/s/AKfycbzyzBQfMjpi8-AQdjQQm58tZsZZdwqoEvoI3RvUZ7F3t4Nr3CQWZQh3fPNKznIJUtnH6Q/exec";
+import { db } from "./firebase-client.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
 const $ = id => document.getElementById(id);
 function normalizePhone(value) {
   let p = String(value || "").replace(/\D/g, "");
@@ -34,22 +36,13 @@ $("teacherForm").addEventListener("submit", async e => {
     return;
   }
   try {
-    const response = await fetch(SHEETS_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-      },
-      body: JSON.stringify({
-        phone: phone,
-        serial: serial
-      })
-    });
-    const data = await response.json();
-    if (!data.success) {
+    const snap = await getDoc(doc(db, "teachers", phone));
+    if (!snap.exists() || String(snap.data().password || "").toUpperCase() !== serial) {
       $("teacherMessage").textContent =
         "رقم الجوال أو كلمة المرور غيرصحيحة.";
       return;
     }
+    const data = snap.data();
     $("teacherName").textContent = data.name;
     $("teacherCategory").textContent = data.category;
     $("teacherMessage").textContent = "";

@@ -1,63 +1,5 @@
-// رابط الشيت بصيغة CSV بعد نشره للويب (خطوات النشر بملف README).
-// غيّري هذا الرابط بالرابط اللي تحصلين عليه من "نشر على الويب".
-const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTbOiRSdxvzZh2h6vdCyqYEBHHTHTj1b8z03ccnlsf6H2O-VZiEs-EViGSHM6620jjX8D-me3TUqXQz/pub?gid=1367919131&single=true&output=csv";
-
-const COL_PASSWORD = "م";
-const COL_NAME = "اسم المعلمة";
-const COL_CATEGORY = "الفئة المناسبة للتدريس";
-const COL_PHONE = "رقم الجوال";
-
-function parseCsv(text) {
-  const rows = [];
-  let row = [], field = "", inQuotes = false;
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i];
-    if (inQuotes) {
-      if (c === '"') {
-        if (text[i + 1] === '"') { field += '"'; i++; }
-        else inQuotes = false;
-      } else field += c;
-    } else if (c === '"') {
-      inQuotes = true;
-    } else if (c === ",") {
-      row.push(field); field = "";
-    } else if (c === "\n" || c === "\r") {
-      if (c === "\r" && text[i + 1] === "\n") i++;
-      row.push(field); field = "";
-      rows.push(row); row = [];
-    } else {
-      field += c;
-    }
-  }
-  if (field.length || row.length) { row.push(field); rows.push(row); }
-  return rows.filter(r => r.some(c => c !== ""));
-}
-
-async function findTeacherInSheet(phone, serial) {
-  const response = await fetch(SHEET_CSV_URL, { cache: "no-store" });
-  if (!response.ok) throw new Error("تعذر تحميل بيانات المعلمات.");
-  const rows = parseCsv(await response.text());
-  const headerRowIndex = rows.findIndex(r => r.includes(COL_NAME));
-  if (headerRowIndex === -1) throw new Error("تعذر إيجاد أعمدة البيانات بالشيت.");
-  const headers = rows[headerRowIndex];
-  const idx = {
-    password: headers.indexOf(COL_PASSWORD),
-    name: headers.indexOf(COL_NAME),
-    category: headers.indexOf(COL_CATEGORY),
-    phone: headers.indexOf(COL_PHONE)
-  };
-  for (let i = headerRowIndex + 1; i < rows.length; i++) {
-    const r = rows[i];
-    if (normalizePhone(r[idx.phone]) === phone &&
-        String(r[idx.password] || "").trim().toUpperCase() === serial) {
-      return {
-        name: String(r[idx.name] || "").trim(),
-        category: idx.category !== -1 ? String(r[idx.category] || "").trim() : ""
-      };
-    }
-  }
-  return null;
-}
+import { db } from "./firebase-client.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const $ = id => document.getElementById(id);
 function normalizePhone(value) {
@@ -94,14 +36,15 @@ $("teacherForm").addEventListener("submit", async e => {
     return;
   }
   try {
-    const teacher = await findTeacherInSheet(phone, serial);
-    if (!teacher) {
+    const snap = await getDoc(doc(db, "teachers", phone));
+    if (!snap.exists() || String(snap.data().password || "").toUpperCase() !== serial) {
       $("teacherMessage").textContent =
         "رقم الجوال أو كلمة المرور غيرصحيحة.";
       return;
     }
-    $("teacherName").textContent = teacher.name;
-    $("teacherCategory").textContent = teacher.category;
+    const data = snap.data();
+    $("teacherName").textContent = data.name;
+    $("teacherCategory").textContent = data.category;
     $("teacherMessage").textContent = "";
     $("loginPanel").classList.add("hidden");
     $("certificateSection").classList.remove("hidden");
